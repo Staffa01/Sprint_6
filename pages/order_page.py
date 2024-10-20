@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 import allure
-import allure
+
 
 class OrderPage(BasePage):
     ORDER_BUTTON_HEADER = By.XPATH, "//div[contains(@class,'Header_Nav')]/button[text()='Заказать']"
@@ -28,17 +28,14 @@ class OrderPage(BasePage):
     ORDER_YANDEX_LOGO = (By.XPATH, "//a[contains(@class,'Header_LogoYandex')]")
     ORDER_SCOOTER_LOGO = (By.XPATH, "//a[contains(@class,'Header_LogoScooter')]")
 
-    @allure.step('Ожидание перехода на новую страницу')
-    def check_current_url_with_wait(self, url):
-        WebDriverWait(self.driver, 10).until(
-            expected_conditions.url_to_be(url))
+    @allure.step('Ожидание перехода на страницу оформления заказа')
+    def check_open_order_url_with_wait(self):
+        self.chec_new_page_open_with_wait(Url.order_url)
 
     @allure.step('Заполнение станции метро в форме заказа')
     def fill_station_form(self):
-        self.driver.find_element(*self.USER_STATION).click()
-        WebDriverWait(self.driver, 10).until(
-            expected_conditions.element_to_be_clickable(self.USER_STATION_EXPAND_BUTTON))
-        self.driver.find_element(*self.USER_STATION_EXPAND_BUTTON).click()    
+        self.click_to_element(self.USER_STATION)
+        self.click_to_element(self.USER_STATION_EXPAND_BUTTON)
         
     @allure.step('Заполнение формы заказа')    
     def fill_order_forms(self, user_data):
@@ -57,4 +54,43 @@ class OrderPage(BasePage):
         self.click_to_element(self.ORDER_COLOR)
         self.send_keys_to_element(self.ORDER_COMMENT, user_data['USER_COMENT'])
 
-        
+    @allure.step('Нажатие на кнопку "Далее"')
+    def click_to_order_next_button(self):
+        self.click_to_element(self.ORDER_NEXT_BUTTON)
+
+    @allure.step('Нажатие на кнопку "Заказать" в экране аренды')
+    def click_to_order_confirm_button(self):
+        self.click_to_element(self.ORDER_CONFIRM_BUTTON)
+    
+    @allure.step('Нажатие на кнопку "Да"')
+    def click_to_order_yes_button(self):
+        self.click_to_element(self.ORDER_YES_BUTTON)
+
+    @allure.step('Проверка открытия окна подтверждение заказа')
+    def find_confirm_modal(self):
+        element = self.find_element_with_wait(self.ORDER_CONFIRM_MODAL)
+        return element.is_displayed()
+    
+    @allure.step('Ожидание перехода на главную страницу')
+    def check_open_home_url_with_wait(self):
+        return self.chec_new_page_open_with_wait(Url.base_url)
+    
+    @allure.step('Ожидание перехода на страницу Дзена')
+    def check_open_dzen_url_with_wait(self):
+        return self.chec_new_page_open_with_wait(Url.dzen_url)
+
+    @allure.step('Открытие страницы заказа')
+    def open_order_page(self):
+        self.open_page(Url.order_url)
+
+    @allure.step('Открытие главной страницы')
+    def open_home_page(self):
+        self.open_page(Url.base_url)
+
+    @allure.step('Нажатие на логотип Самокат')
+    def click_scooter_logo(self):
+        self.click_to_element(self.ORDER_SCOOTER_LOGO)
+
+    @allure.step('Нажатие на логотип Яндекс')
+    def click_jandex_logo(self):
+        self.click_to_element(self.ORDER_YANDEX_LOGO)

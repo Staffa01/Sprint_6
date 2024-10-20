@@ -19,34 +19,31 @@ class TestOrderPage:
 
     def test_order_scooter(self,button_locator,user_data):
         order_page = OrderPage(self.driver)
-        order_page.open_page(Url.base_url)
+        order_page.open_home_page()
         order_page.scroll_to_element(button_locator)
         order_page.click_to_element(button_locator)
-        order_page.check_current_url_with_wait(Url.order_url)
+        order_page.check_open_order_url_with_wait()
         order_page.fill_order_forms(user_data)
-        order_page.click_to_element(OrderPage.ORDER_NEXT_BUTTON)
+        order_page.click_to_order_next_button()
         order_page.fill_rent_form(user_data)
-        order_page.click_to_element(OrderPage.ORDER_CONFIRM_BUTTON)
-        order_page.click_to_element(OrderPage.ORDER_YES_BUTTON)
-        order_page.find_element_with_wait(OrderPage.ORDER_CONFIRM_MODAL)
-        assert order_page.find_element_with_wait(OrderPage.ORDER_CONFIRM_MODAL).is_displayed() == True
+        order_page.click_to_order_confirm_button()
+        order_page.click_to_order_yes_button()
+        assert order_page.find_confirm_modal() == True
 
     @allure.title('Тест перехода по нажатию на логотиплого самоката')
     def test_scooter_logo(self):
         order_page = OrderPage(self.driver)
-        order_page.open_page(Url.order_url)
-        order_page.click_to_element(OrderPage.ORDER_SCOOTER_LOGO)
-        order_page.check_current_url_with_wait(Url.base_url)
-        assert self.driver.current_url == Url.base_url
+        order_page.open_order_page()
+        order_page.click_scooter_logo()
+        assert order_page.check_open_home_url_with_wait() == True
 
     @allure.title('Тест перехода по нажатию на логотип Яндекса')
     def test_yandex_logo(self):
         order_page = OrderPage(self.driver)
-        order_page.open_page(Url.order_url)
-        order_page.click_to_element(OrderPage.ORDER_YANDEX_LOGO)
+        order_page.open_order_page()
+        order_page.click_jandex_logo()
         order_page.set_next_tab()
-        order_page.check_current_url_with_wait(Url.dzen_url)
-        assert self.driver.current_url == Url.dzen_url
+        assert order_page.check_open_dzen_url_with_wait() == True
 
     @classmethod
     def teardown_class(cls):
